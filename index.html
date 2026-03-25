@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preise & Pläne</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #fffdf0;
+    --bg2: #fff;
+    --surface: #ffffff;
+    --surface2: #fefce8;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.12);
+    --accent: #ca8a04;
+    --accent2: #a16207;
+    --green: #16a34a;
+    --green2: #22c55e;
+    --green-light: #dcfce7;
+    --gold: #ca8a04;
+    --gold-light: #fef9c3;
+    --blue: #ca8a04;
+    --blue-light: #fef9c3;
+    --text: #1a1a2e;
+    --text2: #374151;
+    --muted: #6b7280;
+    --radius: 20px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Warm background texture */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 40% at 0% 0%, rgba(202,138,4,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(202,138,4,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 30% at 50% 50%, rgba(22,163,74,0.03) 0%, transparent 70%);
+  }
+
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* BRAND BAR */
+  .brand-bar {
+    background: linear-gradient(135deg, #1a1a2e, #2d2d4e);
+    padding: 10px 24px;
+    text-align: center;
+  }
+  .brand-bar-inner {
+    max-width: 1160px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .brand-bar-logo {
+    font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800;
+    color: #fff; letter-spacing: -0.01em;
+  }
+  .brand-bar-logo strong { color: #ca8a04; }
+  .brand-bar-domain {
+    font-size: 13px; color: rgba(255,255,255,0.5);
+    border-left: 1px solid rgba(255,255,255,0.2); padding-left: 12px;
+  }
+
+  /* HEADER */
+  header { padding: 32px 0 24px; text-align: center; animation: fadeDown 0.6s ease both; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, #ca8a04, #a16207);
+    color: #fff; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 18px; border-radius: 100px; margin-bottom: 24px;
+    box-shadow: 0 4px 16px rgba(202,138,4,0.25);
+  }
+
+  h1, .ki-pricing h1 {
+    font-family: 'Inter', sans-serif !important;
+    font-size: clamp(26px, 3.2vw, 44px) !important;
+    font-weight: 800 !important;
+    -webkit-font-smoothing: antialiased !important;
+    line-height: 1.06 !important;
+    letter-spacing: -0.03em !important;
+    color: #1a1a2e !important;
+    text-transform: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  /* Force our fonts inside the pricing scope */
+  .ki-pricing * {
+    box-sizing: border-box;
+  }
+  .ki-pricing p, .ki-pricing div, .ki-pricing span, .ki-pricing a {
+    font-family: 'Inter', sans-serif;
+  }
+  .ki-pricing h1, .ki-pricing h2, .ki-pricing h3,
+  .ki-pricing .plan-name, .ki-pricing .section-title-text,
+  .ki-pricing .price, .ki-pricing .navbar-logo-name,
+  .ki-pricing .brand-bar-logo {
+    font-family: 'Inter', sans-serif !important;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, #ca8a04, #a16207);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .subtitle { margin: 18px auto 0; font-size: 17px; color: var(--muted); max-width: 520px; line-height: 1.65; }
+
+  /* TRUST BAR */
+  .trust-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 32px; flex-wrap: wrap;
+    margin: 32px 0 0;
+    animation: fadeDown 0.6s 0.15s ease both;
+  }
+  .trust-item { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: var(--text2); }
+  .trust-item .dot { width: 8px; height: 8px; background: var(--green2); border-radius: 50%; }
+
+  /* SETUP FEE */
+  .setup-banner {
+    margin: 40px 0 0;
+    background: linear-gradient(135deg, #fefce8, #fef9c3);
+    border: 2px solid rgba(202,138,4,0.3);
+    border-radius: 18px;
+    padding: 22px 32px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    box-shadow: 0 4px 20px rgba(202,138,4,0.06);
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+  .setup-left { display: flex; align-items: center; gap: 16px; }
+  .setup-icon { font-size: 30px; }
+  .setup-text h3 { font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .setup-text p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .setup-price { font-family: 'Inter', sans-serif; font-size: 30px; font-weight: 800; color: var(--blue); white-space: nowrap; }
+  .setup-price span { font-size: 13px; font-weight: 500; color: var(--muted); display: block; text-align: right; margin-top: 2px; }
+
+  /* TOGGLE */
+  .toggle-wrap {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    margin: 44px 0 52px;
+    animation: fadeDown 0.6s 0.25s ease both;
+  }
+  .toggle-label { font-size: 14px; font-weight: 500; color: var(--muted); transition: color 0.2s; }
+  .toggle-label.active { color: var(--text); font-weight: 600; }
+  .toggle-switch { position: relative; width: 52px; height: 28px; cursor: pointer; }
+  .toggle-switch input { display: none; }
+  .toggle-track { position: absolute; inset: 0; background: #e5e7eb; border-radius: 100px; transition: background 0.3s; }
+  .toggle-switch input:checked ~ .toggle-track { background: linear-gradient(135deg, var(--green), var(--green2)); }
+  .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; background: #fff; border-radius: 50%; transition: transform 0.3s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+  .toggle-switch input:checked ~ .toggle-thumb { transform: translateX(24px); }
+  .save-pill {
+    background: var(--green-light); color: var(--green);
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px;
+    border: 1px solid rgba(22,163,74,0.2);
+  }
+
+  /* SECTION */
+  .section-wrap { margin-bottom: 68px; animation: fadeUp 0.6s 0.3s ease both; }
+  .section-header { text-align: center; margin-bottom: 30px; }
+  .section-icon { font-size: 34px; margin-bottom: 10px; }
+  .section-title-text {
+    font-family: 'Inter', sans-serif; font-size: 22px; font-weight: 800;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .section-desc { font-size: 14px; color: var(--muted); max-width: 460px; margin: 0 auto; line-height: 1.55; }
+
+  /* CARDS */
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
+
+  .plan-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px 24px;
+    position: relative;
+    transition: transform 0.25s, box-shadow 0.25s;
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column;
+  }
+  .plan-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+
+  .plan-card.highlight {
+    border: 2px solid var(--green);
+    background: linear-gradient(160deg, #f0fdf4 0%, #ffffff 60%);
+    box-shadow: 0 0 0 4px rgba(22,163,74,0.08), var(--shadow-lg);
+    transform: scale(1.035);
+  }
+  .plan-card.highlight:hover { transform: scale(1.035) translateY(-6px); }
+
+  .plan-card.unlimited {
+    border: 2px solid rgba(202,138,4,0.25);
+    background: linear-gradient(160deg, #fefce8 0%, #ffffff 60%);
+    box-shadow: 0 0 0 4px rgba(202,138,4,0.05), var(--shadow);
+  }
+
+  .top-tag {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 5px 16px; border-radius: 100px; white-space: nowrap; color: #fff;
+  }
+  .tag-green { background: linear-gradient(135deg, var(--green), var(--green2)); }
+  .tag-gold  { background: linear-gradient(135deg, #ca8a04, #a16207); }
+
+  /* Volume pill */
+  .vol-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 100px; font-size: 12px; font-weight: 700;
+    padding: 5px 12px; margin-bottom: 14px; width: fit-content;
+  }
+  .vb-blue  { background: var(--blue-light); color: var(--blue); border: 1px solid rgba(202,138,4,0.25); }
+  .vb-green { background: var(--green-light); color: var(--green); border: 1px solid rgba(22,163,74,0.2); }
+  .vb-gold  { background: var(--blue-light);  color: var(--blue);  border: 1px solid rgba(202,138,4,0.18); }
+
+  .plan-name { font-family: 'Inter', sans-serif; font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+  .plan-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 20px; flex: 1; }
+
+  /* Price */
+  .price-wrap { margin-bottom: 20px; }
+  .price { font-family: 'Inter', sans-serif; font-size: 40px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: var(--text); }
+  .price sup { font-size: 20px; vertical-align: super; line-height: 0; margin-right: 1px; font-weight: 600; }
+  .price-period { font-size: 13px; color: var(--muted); margin-top: 5px; }
+  .price-save { font-size: 12px; color: var(--green); margin-top: 4px; font-weight: 600; display: none; }
+  .per-unit { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .pm { display: block; } .py { display: none; }
+  .ppm { display: inline; } .ppy { display: none; }
+  body.yearly .pm { display: none; } body.yearly .py { display: block; }
+  body.yearly .ppm { display: none; } body.yearly .ppy { display: inline; }
+  body.yearly .price-save { display: block; }
+
+  .flat-tag { background: linear-gradient(135deg, #ca8a04, #a16207) !important;
+    display: inline-block;
+    background: linear-gradient(135deg, #ca8a04, #a16207);
+    color: #fff; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 100px;
+    margin-left: 6px; vertical-align: middle; letter-spacing: 0.06em;
+  }
+
+  /* CTA BUTTONS */
+  .cta-btn {
+    display: block; width: 100%; padding: 15px; border-radius: 12px;
+    font-size: 15px; font-weight: 700; text-align: center;
+    cursor: pointer; border: none; transition: all 0.2s;
+    text-decoration: none; margin-bottom: 20px;
+    font-family: 'Inter', sans-serif; letter-spacing: 0.01em;
+  }
+
+  /* GREEN – Hauptkauf-Button */
+  .btn-green {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(22,163,74,0.35);
+  }
+  .btn-green:hover { box-shadow: 0 6px 28px rgba(22,163,74,0.5); transform: translateY(-2px); }
+
+  /* GREEN STRONG – highlight card */
+  .btn-green-strong { 
+    background: linear-gradient(135deg, #15803d, #16a34a);
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(22,163,74,0.4);
+    font-size: 16px;
+  }
+  .btn-green-strong:hover { box-shadow: 0 8px 32px rgba(22,163,74,0.55); transform: translateY(-2px); }
+
+  /* GOLD – unlimited */
+  .btn-blue-dark {
+    background: linear-gradient(135deg, #ca8a04, #a16207);
+    color: #1a1a2e;
+    box-shadow: 0 4px 18px rgba(202,138,4,0.25);
+  }
+  .btn-gold:hover { box-shadow: 0 6px 28px rgba(202,138,4,0.4); transform: translateY(-2px); }
+
+  /* Features */
+  .divider { height: 1px; background: var(--border); margin-bottom: 16px; }
+  .feat-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 700; margin-bottom: 10px; }
+  .feature { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text2); margin-bottom: 8px; line-height: 1.4; }
+  .fi { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; margin-top: 1px; }
+  .fi-y { background: var(--green-light); color: var(--green); font-weight: 700; }
+  .fi-n { background: #f3f4f6; color: #9ca3af; }
+  .feat-dim { color: #9ca3af; }
+
+  /* URGENCY STRIP */
+  .urgency-strip {
+    background: linear-gradient(135deg, #ca8a04, #a16207);
+    color: #fff; text-align: center; padding: 12px;
+    font-size: 13px; font-weight: 600; border-radius: 12px;
+    margin-bottom: 68px;
+    animation: fadeUp 0.6s 0.4s ease both;
+    box-shadow: 0 4px 20px rgba(202,138,4,0.25);
+  }
+  .urgency-strip span { opacity: 0.85; font-weight: 400; }
+
+  /* TRIAL */
+  .trial-banner {
+    margin: 0 0 64px;
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border: 2px solid rgba(22,163,74,0.2);
+    border-radius: var(--radius);
+    padding: 28px 36px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    box-shadow: 0 4px 20px rgba(22,163,74,0.08);
+    animation: fadeUp 0.6s 0.5s ease both;
+  }
+  .trial-text h3 { font-family: 'Inter', sans-serif; font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+  .trial-text p  { font-size: 14px; color: var(--muted); }
+  .trial-btn {
+    background: linear-gradient(135deg, var(--green), var(--green2));
+    color: #fff; border: none; padding: 14px 32px; border-radius: 12px;
+    font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: all 0.2s; font-family: 'Inter', sans-serif;
+    box-shadow: 0 4px 18px rgba(22,163,74,0.3);
+  }
+  .trial-btn:hover { box-shadow: 0 6px 26px rgba(22,163,74,0.45); transform: translateY(-2px); }
+
+  /* FAQ */
+  .faq { margin-bottom: 80px; animation: fadeUp 0.6s 0.6s ease both; }
+  .faq h2 { font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 800; text-align: center; color: var(--text); margin-bottom: 28px; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .faq-item { background: var(--surface); border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .faq-item h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 7px; }
+  .faq-item p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(18px);  } to { opacity: 1; transform: translateY(0); } }
+
+
+
+  /* IMPRESSUM */
+  .impressum {
+    background: #1a1a2e;
+    color: rgba(255,255,255,0.75);
+    padding: 48px 24px 24px;
+    margin-top: 32px;
+  }
+  .impressum-inner {
+    max-width: 1160px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 40px; margin-bottom: 32px;
+  }
+  .impressum-col h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: #ca8a04; margin-bottom: 12px;
+  }
+  .impressum-col p {
+    font-size: 13px; line-height: 1.7;
+    color: rgba(255,255,255,0.6);
+  }
+  .impressum-col a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .impressum-col a:hover { color: #ca8a04; }
+  .impressum-bottom {
+    max-width: 1160px; margin: 0 auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 12px; color: rgba(255,255,255,0.35);
+    text-align: center;
+  }
+  @media (max-width: 640px) {
+    .impressum-inner { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  @media (min-width: 860px) {
+    h1 { font-size: 44px !important; line-height: 1.08 !important; }
+    .subtitle { font-size: 16px; }
+    .plan-name { font-size: 18px; font-weight: 700; }
+    .price { font-size: 40px; }
+    .section-title-text { font-size: 20px; font-weight: 700; }
+  }
+  @media (max-width: 860px) {
+    .plans { grid-template-columns: 1fr; }
+    .plan-card.highlight { transform: none; }
+    .plan-card.highlight:hover { transform: translateY(-6px); }
+    .setup-banner { flex-direction: column; text-align: center; }
+    .setup-left { flex-direction: column; text-align: center; }
+    .trial-banner { flex-direction: column; text-align: center; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .trust-bar { gap: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="brand-bar">
+  <div class="brand-bar-inner">
+    <div class="brand-bar-logo">🤖 <strong>KI-Automat24</strong></div>
+    <div class="brand-bar-domain">ki-automat24.de</div>
+  </div>
+</div>
+<div class="ki-pricing"><div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="badge">🤖 KI-Automatisierung</div>
+    <h1>Mehr Kunden, weniger Stress.<br><span>Vollautomatisch.</span></h1>
+    <p class="subtitle">Fertige KI-Workflows für Friseure, Gastronomie & Handwerker. Einrichten lassen – und nie wieder Termine oder Angebote manuell bearbeiten.</p>
+
+    <div class="trust-bar">
+      
+      <div class="trust-item"><div class="dot"></div> 7 Tage gratis testen</div>
+      <div class="trust-item"><div class="dot"></div> Jederzeit kündbar</div>
+      <div class="trust-item"><div class="dot"></div> Made in Germany</div>
+    </div>
+  </header>
+
+  <!-- SETUP FEE -->
+  <div class="setup-banner">
+    <div class="setup-left">
+      <div class="setup-icon">⚙️</div>
+      <div class="setup-text">
+        <h3>Einmalige Einrichtungsgebühr – 599 €</h3>
+        <p>Wir richten deinen kompletten n8n-Workflow ein – konfiguriert, getestet & sofort einsatzbereit.<br>Einmalig pro Produkt beim ersten Kauf, danach nur noch die monatliche Rate.</p>
+      </div>
+    </div>
+    <div class="setup-price">599 € <span>einmalig pro Produkt</span></div>
+  </div>
+
+  <!-- TOGGLE -->
+  <div class="toggle-wrap">
+    <span class="toggle-label active" id="lm">Monatlich</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="billing-toggle">
+      <div class="toggle-track"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+    <span class="toggle-label" id="ly">Jährlich</span>
+    <span class="save-pill">💰 17% sparen</span>
+  </div>
+
+  <!-- ============================= -->
+  <!-- PRODUKT 1: TERMIN-MANAGER     -->
+  <!-- ============================= -->
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-icon">✂️🍽️</div>
+      <div class="section-title-text">Termin-Manager</div>
+      <div class="section-desc">Dein KI-Assistent nimmt Anrufe entgegen, bucht Termine & sendet WhatsApp-Bestätigungen – rund um die Uhr, auch wenn du beschäftigt bist.</div>
+    </div>
+
+    <div class="plans">
+
+      <div class="plan-card">
+        <div class="vol-badge vb-blue">📞 20 Anrufe / Tag</div>
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">Für kleine Salons & Cafés – automatische Terminbuchung ohne Stress.</div>
+        <div class="price-wrap">
+          <div class="price pm"><sup>€</sup>199</div>
+          <div class="price py"><sup>€</sup>1.990</div>
+          <div class="price-period"><span class="ppm">pro Monat</span><span class="ppy">pro Jahr</span></div>
+          <div class="price-save">✓ ~2 Monate geschenkt!</div>
+          <div class="per-unit">+ 599 € Einrichtung (einmalig)</div>
+        </div>
+        <a href="#" class="cta-btn btn-green">✓ Jetzt kaufen</a>
+        <div class="divider"></div>
+        <div class="feat-title">Enthaltene Features</div>
+        <div class="feature"><span class="fi fi-y">✓</span> 20 KI-Anrufe pro Tag</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Buchung in Google Calendar</div>
+        <div class="feature"><span class="fi fi-y">✓</span> WhatsApp-Bestätigung an Kunden</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Alternativvorschläge bei vollen Slots</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Shore / Bookingkit Integration</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Erinnerungs-Nachrichten</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Stornierungsverwaltung</div>
+      </div>
+
+      <div class="plan-card highlight">
+        <div class="top-tag tag-green">⭐ Meistgebucht</div>
+        <div class="vol-badge vb-green">📞 50 Anrufe / Tag</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">Für wachsende Betriebe – doppelte Kapazität, Shore-Integration & Erinnerungen.</div>
+        <div class="price-wrap">
+          <div class="price pm"><sup>€</sup>399</div>
+          <div class="price py"><sup>€</sup>3.990</div>
+          <div class="price-period"><span class="ppm">pro Monat</span><span class="ppy">pro Jahr</span></div>
+          <div class="price-save">✓ ~2 Monate geschenkt!</div>
+          <div class="per-unit">+ 599 € Einrichtung (einmalig)</div>
+        </div>
+        <a href="#" class="cta-btn btn-green-strong">✓ Jetzt kaufen</a>
+        <div class="divider"></div>
+        <div class="feat-title">Alles in Starter, plus:</div>
+        <div class="feature"><span class="fi fi-y">✓</span> 50 KI-Anrufe pro Tag</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Shore & Bookingkit Integration</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Erinnerungs-WhatsApp 24h vorher</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Stornierungsverwaltung per WhatsApp</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Prioritäts-Support & Updates</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Unbegrenzte Anrufe</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Individuelle Anpassung</div>
+      </div>
+
+      <div class="plan-card unlimited">
+        <div class="top-tag tag-gold">🏢 Enterprise</div>
+        <div class="vol-badge vb-gold">📞 Unbegrenzt <span class="flat-tag">FLAT</span></div>
+        <div class="plan-name">Unlimited</div>
+        <div class="plan-desc">Für große Unternehmen – eine Flatrate, keine Limits, kein Stress.</div>
+        <div class="price-wrap">
+          <div class="price pm" style="color:var(--blue)"><sup style="color:var(--blue)">€</sup>599</div>
+          <div class="price py" style="color:var(--blue)"><sup style="color:var(--blue)">€</sup>5.990</div>
+          <div class="price-period"><span class="ppm">pro Monat – Flat</span><span class="ppy">pro Jahr – Flat</span></div>
+          <div class="price-save" style="color:var(--blue)">✓ ~2 Monate geschenkt!</div>
+          <div class="per-unit">+ 599 € Einrichtung (einmalig)</div>
+        </div>
+        <a href="#" class="cta-btn btn-blue-dark">✓ Jetzt anfragen</a>
+        <div class="divider"></div>
+        <div class="feat-title">Alles in Pro, plus:</div>
+        <div class="feature"><span class="fi fi-y">✓</span> <strong>Unbegrenzte Anrufe – echte Flat</strong></div>
+        <div class="feature"><span class="fi fi-y">✓</span> Mehrere Standorte & Filialen</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Individuelle Workflow-Anpassung</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Dedizierter Account Manager</div>
+        <div class="feature"><span class="fi fi-y">✓</span> SLA & 24/7 Support</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Onboarding-Call (2h persönlich)</div>
+        <div class="feature"><span class="fi fi-y">✓</span> White-Label Option</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- URGENCY STRIP -->
+  <div class="urgency-strip">
+    🔥 Begrenztes Angebot: <strong>Einrichtung heute buchen</strong> – Workflow innerhalb von 48h live! <span>Nur wenige Plätze verfügbar.</span>
+  </div>
+
+  <!-- ============================= -->
+  <!-- PRODUKT 2: ANGEBOTS-MASCHINE  -->
+  <!-- ============================= -->
+  <div class="section-wrap">
+    <div class="section-header">
+      <div class="section-icon">🔨🏗️</div>
+      <div class="section-title-text">Angebots-Maschine</div>
+      <div class="section-desc">Foto vom Regiebericht rein – fertiges PDF-Angebot raus. KI liest Handschrift, rechnet Preise, Chef bestätigt per Handy.</div>
+    </div>
+
+    <div class="plans">
+
+      <div class="plan-card">
+        <div class="vol-badge vb-blue">📄 50 Angebote / Monat</div>
+        <div class="plan-name">Starter</div>
+        <div class="plan-desc">Für kleinere Handwerksbetriebe – Angebote in Minuten statt Stunden.</div>
+        <div class="price-wrap">
+          <div class="price pm"><sup>€</sup>199</div>
+          <div class="price py"><sup>€</sup>1.990</div>
+          <div class="price-period"><span class="ppm">pro Monat</span><span class="ppy">pro Jahr</span></div>
+          <div class="price-save">✓ ~2 Monate geschenkt!</div>
+          <div class="per-unit">+ 599 € Einrichtung (einmalig)</div>
+        </div>
+        <a href="#" class="cta-btn btn-green">✓ Jetzt kaufen</a>
+        <div class="divider"></div>
+        <div class="feat-title">Enthaltene Features</div>
+        <div class="feature"><span class="fi fi-y">✓</span> 50 Angebote pro Monat</div>
+        <div class="feature"><span class="fi fi-y">✓</span> KI liest Handschrift (AI Vision)</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Materialabgleich mit Excel-Preisliste</div>
+        <div class="feature"><span class="fi fi-y">✓</span> PDF-Angebot automatisch erstellt</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Freigabe-Push ans Handy des Chefs</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Direktversand an Kunden</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> DATEV / Lexoffice Export</div>
+      </div>
+
+      <div class="plan-card highlight">
+        <div class="top-tag tag-green">⭐ Meistgebucht</div>
+        <div class="vol-badge vb-green">📄 100 Angebote / Monat</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-desc">Für wachsende Betriebe – mehr Volumen, Direktversand & Buchhaltungsexport.</div>
+        <div class="price-wrap">
+          <div class="price pm"><sup>€</sup>399</div>
+          <div class="price py"><sup>€</sup>3.990</div>
+          <div class="price-period"><span class="ppm">pro Monat</span><span class="ppy">pro Jahr</span></div>
+          <div class="price-save">✓ ~2 Monate geschenkt!</div>
+          <div class="per-unit">+ 599 € Einrichtung (einmalig)</div>
+        </div>
+        <a href="#" class="cta-btn btn-green-strong">✓ Jetzt kaufen</a>
+        <div class="divider"></div>
+        <div class="feat-title">Alles in Starter, plus:</div>
+        <div class="feature"><span class="fi fi-y">✓</span> 100 Angebote pro Monat</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Direktversand per E-Mail an Kunden</div>
+        <div class="feature"><span class="fi fi-y">✓</span> DATEV / Lexoffice Export</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Angebotsstatus-Tracking</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Prioritäts-Support & monatliche Updates</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Unbegrenzte Angebote</div>
+        <div class="feature feat-dim"><span class="fi fi-n">✕</span> Individuelle Anpassung</div>
+      </div>
+
+      <div class="plan-card unlimited">
+        <div class="top-tag tag-gold">🏢 Enterprise</div>
+        <div class="vol-badge vb-gold">📄 Unbegrenzt <span class="flat-tag">FLAT</span></div>
+        <div class="plan-name">Unlimited</div>
+        <div class="plan-desc">Für große Betriebe mit hohem Volumen – eine Flatrate, keine Überraschungen.</div>
+        <div class="price-wrap">
+          <div class="price pm" style="color:var(--blue)"><sup style="color:var(--blue)">€</sup>599</div>
+          <div class="price py" style="color:var(--blue)"><sup style="color:var(--blue)">€</sup>5.990</div>
+          <div class="price-period"><span class="ppm">pro Monat – Flat</span><span class="ppy">pro Jahr – Flat</span></div>
+          <div class="price-save" style="color:var(--blue)">✓ ~2 Monate geschenkt!</div>
+          <div class="per-unit">+ 599 € Einrichtung (einmalig)</div>
+        </div>
+        <a href="#" class="cta-btn btn-blue-dark">✓ Jetzt anfragen</a>
+        <div class="divider"></div>
+        <div class="feat-title">Alles in Pro, plus:</div>
+        <div class="feature"><span class="fi fi-y">✓</span> <strong>Unbegrenzte Angebote – echte Flat</strong></div>
+        <div class="feature"><span class="fi fi-y">✓</span> Custom Angebotsvorlagen & Branding</div>
+        <div class="feature"><span class="fi fi-y">✓</span> ERP-Integration (SAP, Navision o.ä.)</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Dedizierter Account Manager</div>
+        <div class="feature"><span class="fi fi-y">✓</span> SLA & 24/7 Support</div>
+        <div class="feature"><span class="fi fi-y">✓</span> Onboarding-Call (2h persönlich)</div>
+        <div class="feature"><span class="fi fi-y">✓</span> White-Label Option</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TRIAL -->
+  <div class="trial-banner">
+    <div class="trial-text">
+      <h3>🎁 7 Tage komplett kostenlos testen</h3>
+      <p>Kein Risiko – die Einrichtungsgebühr fällt erst nach der Testphase an. Keine Kreditkarte nötig.</p>
+    </div>
+    <button class="trial-btn">→ Gratis starten</button>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq">
+    <h2>Häufige Fragen</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h4>Wann fällt die 599 € Einrichtungsgebühr an?</h4>
+        <p>Erst nach der kostenlosen 7-Tage-Testphase – einmalig pro Produkt. Sie deckt die vollständige Einrichtung, Tests & Inbetriebnahme.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Was bedeutet „Flat" beim Unlimited-Paket?</h4>
+        <p>Egal wie viele Anrufe oder Angebote – du zahlst immer 599 €/Monat. Keine Überraschungen, keine Extrakosten, kein Limit.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Brauche ich technisches Know-how?</h4>
+        <p>Nein! Wir richten alles für dich ein. Danach läuft alles vollautomatisch – kein Coding, kein Aufwand auf deiner Seite.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Was passiert wenn ich das Tageslimit überschreite?</h4>
+        <p>Du bekommst sofort eine Benachrichtigung. Anrufe werden nicht abgebrochen – du kannst jederzeit unkompliziert upgraden.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Kann ich jederzeit kündigen oder wechseln?</h4>
+        <p>Ja – jederzeit kündigen oder Paket wechseln. Beim Upgrade wird die Differenz fair anteilig berechnet.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Welche Zahlungsmethoden gibt es?</h4>
+        <p>Kreditkarte, PayPal & SEPA-Lastschrift – sicher & schnell über Shopify Payments abgewickelt.</p>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+  <!-- IMPRESSUM -->
+  <footer class="impressum">
+    <div class="impressum-inner">
+      <div class="impressum-col">
+        <h4>Impressum</h4>
+        <p>ai-automat24.de<br>
+        Inhaber: Hüseyin Uğur<br>
+        Alemannen Str. 17<br>
+        89423 Gundelfingen a.d. Donau<br>
+        Deutschland</p>
+      </div>
+      <div class="impressum-col">
+        <h4>Kontakt</h4>
+        <p>E-Mail: <a href="mailto:info@ai-automat24.de">info@ai-automat24.de</a><br>
+        Webseite: <a href="https://ai-automat24.de">ai-automat24.de</a></p>
+      </div>
+      <div class="impressum-col">
+        <h4>Register & Verifikation</h4>
+        <p>Steuernummer (TR): 3850718657<br>
+        Aksaray Vergi Dairesi</p>
+      </div>
+    </div>
+    <div class="impressum-bottom">
+      © 2025 KI-Automat24 · Alle Rechte vorbehalten
+    </div>
+  </footer>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const toggle = document.getElementById('billing-toggle');
+  toggle.addEventListener('change', () => {
+    do
